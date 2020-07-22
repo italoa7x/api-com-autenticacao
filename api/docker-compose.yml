@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+     - POSTGRES_DB=ecommerce
+     - DB_USER=postgres
+     - DB_PASSWORD=docker
+   
+  backend:
+    image: node: 12.16.3
+    volumes: 
+      - ./.:/backend
+    ports: 
+      - 3000:3000
+    command:
+      bash -c "cd /backend && npm install && npx knex migrate:latest"
