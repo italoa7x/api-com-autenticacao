@@ -15,8 +15,4 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: false })) //apenas dados simples
 app.use(bodyParser.json())
 app.use(routes)
-app.listen(3000, () => {
-    console.log('servidor iniciado na porta ')
-})
-
-
+app.listen(3000)

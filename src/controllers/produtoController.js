@@ -1,4 +1,5 @@
 const connection = require('../database/configPg')
+const cache = require('../services/cache')
 
 module.exports = {
     async storage(req, res) {
@@ -20,13 +21,21 @@ module.exports = {
     async findById(req, res){
         const {id} = req.params
 
+        const produtosEmCache = await cache.get(id);
+
+        if(produtosEmCache){
+            return res.json(produtosEmCache);
+        }
+        
         const produto = await connection('produtos')
         .where('id', id)
         .first()
         .select()
-        if(produto)
-            return res.json(produto)
         
+        // adiciona o produto buscado em cache, para que na proxima consulta
+        // o mesmo já esteja disponivel
+        cache.set(id, produto, 60 * 15);
+        return res.json(produto)
         
     }
 }
